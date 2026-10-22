@@ -21,18 +21,25 @@ namespace static_metods_separation
             InitializeComponent();
         }
 
-        private static void print_random_abcd(int[]x1x2,
+        private static int[] Parse_Coeffs(TextBox tb1, TextBox tb2)
+        {
+            int[] coeffs = new int[2];
+            coeffs[0] = int.Parse(tb1.Text);
+            coeffs[1] = int.Parse(tb2.Text) + 1;
+            return coeffs;
+        }
+        private static void Print_Random_ABCD(int[]coeffs,
             TextBox tb1, TextBox tb2, TextBox tb3, TextBox tb4)
         {
-            int x1 = x1x2[0];
-            int x2 = x1x2[1];
+            int coeff1 = coeffs[0];
+            int coeff2 = coeffs[1];
             Random r = new Random();
-            tb1.Text = r.Next(x1, x2).ToString();
-            tb2.Text = r.Next(x1, x2).ToString();
-            tb3.Text = r.Next(x1, x2).ToString();
-            tb4.Text = r.Next(x1, x2).ToString();
+            tb1.Text = r.Next(coeff1, coeff2).ToString();
+            tb2.Text = r.Next(coeff1, coeff2).ToString();
+            tb3.Text = r.Next(coeff1, coeff2).ToString();
+            tb4.Text = r.Next(coeff1, coeff2).ToString();
         }
-        private static int[] parse_abcd(TextBox tb1, TextBox tb2, TextBox tb3, TextBox tb4)
+        private static int[] Parse_ABCD(TextBox tb1, TextBox tb2, TextBox tb3, TextBox tb4)
         {
             int[] abcd = new int[4];
             abcd[0] = int.Parse(tb1.Text);
@@ -41,14 +48,19 @@ namespace static_metods_separation
             abcd[3] = int.Parse(tb4.Text);
             return abcd;
         }
-        private static int[] parse_x1x2(TextBox tb1, TextBox tb2)
+        private static void Print_ABCD(int[] abcd, TextBox tb)
         {
-            int[] x1x2 = new int[2];
-            x1x2[0] = int.Parse(tb1.Text);
-            x1x2[1] = int.Parse(tb2.Text) + 1;
-            return x1x2;
+            tb.Text = "";
+
+            int a = abcd[0];
+            int b = abcd[1];
+            int c = abcd[2];
+            int d = abcd[3];
+
+            tb.Text += $"A = {a}\t B = {b}\t C = {c}\t D = {d}";
+            tb.Text += Environment.NewLine + Environment.NewLine;
         }
-        private static void print_equation(int[] abcd, TextBox tb)
+        private static void Print_Equation(int[] abcd, TextBox tb)
         {
             int a = abcd[0];
             int b = abcd[1];
@@ -62,7 +74,7 @@ namespace static_metods_separation
                 tb.Text += $"{a}x\u00B3";
             }
 
-            if (a != 0 & b != 0 & b > 0)
+            if (a != 0 & b > 0)
             {
                 tb.Text += $" + {b}x\u00B2";
             }
@@ -70,7 +82,7 @@ namespace static_metods_separation
                 if (b != 0)
                     tb.Text += $" {b}x\u00B2";
 
-            if ((a != 0 | b != 0) & c != 0 & c > 0)
+            if ((a != 0 | b != 0) & c > 0)
             {
                 tb.Text += $" + {c}x";
             }
@@ -78,7 +90,7 @@ namespace static_metods_separation
                 if (c != 0)
                     tb.Text += $" {c}x";
 
-            if ((a != 0 | b != 0 | c != 0) & d != 0 & d > 0)
+            if ((a != 0 | b != 0 | c != 0) & d > 0)
             {
                 tb.Text += $" + {d}";
             }
@@ -86,16 +98,11 @@ namespace static_metods_separation
                 if (d != 0)
                     tb.Text += $" {d}";
         }
-        private static double calculate_y(int x, int[] abcd)
+        private static double Calculate_Y(int x, int[] abcd)
         {
-            int a = abcd[0];
-            int b = abcd[1];
-            int c = abcd[2];
-            int d = abcd[3];
-
-            return calculate_y((double)x, abcd);
+            return Calculate_Y((double)x, abcd);
         }
-        private static double calculate_y(double x, int[] abcd)
+        private static double Calculate_Y(double x, int[] abcd)
         {
             int a = abcd[0];
             int b = abcd[1];
@@ -105,7 +112,7 @@ namespace static_metods_separation
             double y = a * Math.Pow(x, 3) + b * Math.Pow(x, 2) + c * x + d;
             return y;
         }
-        private static double[,] find_xy(int[] abcd, int start, int end, int step)
+        private static double[,] Find_XY(int[] abcd, int start, int end, int step)
         {
             int a = abcd[0];
             int b = abcd[1];
@@ -116,7 +123,7 @@ namespace static_metods_separation
             double[,] mas_xy = new double[length, 2];
             for (int x = start; x <= end; x += step)
             {
-                double y = calculate_y(x, abcd);
+                double y = Calculate_Y(x, abcd);
                 int i = (x - start) / step;
                 mas_xy[i, 0] = x;
                 mas_xy[i, 1] = y;
@@ -124,7 +131,7 @@ namespace static_metods_separation
 
             return mas_xy;
         }
-        private static void print_xy(double[,] mas_xy, TextBox tb)
+        private static void Print_XY(double[,] mas_xy, TextBox tb)
         {
             int length = mas_xy.GetLength(0);
             for (int i = 0; i < length; i++)
@@ -133,7 +140,7 @@ namespace static_metods_separation
                 tb.Text += Environment.NewLine;
             }
         }
-        private  static double[,] find_change_sign(double[,] mas_xy, int length)
+        private  static double[,] Find_Change_Sign(double[,] mas_xy, int length)
         {
             double[,] change_sign = new double[7, 2];
             int count = 0;
@@ -147,7 +154,7 @@ namespace static_metods_separation
                     change_sign[count + 1, 1] = mas_xy[i, 1];
                     count += 2;
                 }
-                if ((mas_xy[i, 1] == 0) && (i != length - 1) &&
+                if ((i != length - 1) && (mas_xy[i, 1] == 0) &&
                     (mas_xy[i - 1, 1] * mas_xy[i + 1, 1] < 0))
                 {
                     change_sign[count, 0] = mas_xy[i - 1, 0];
@@ -162,50 +169,49 @@ namespace static_metods_separation
 
             return change_sign;
         }
-        private static void print_change_sign(double[,] change_sign, TextBox tb)
+        private static void Print_Change_Sign(double[,] change_sign, TextBox tb)
         {
             double length = change_sign[6, 0];
 
             for (int i = 0; i < length; i += 2)
             {
-                tb.Text += "Смена знаков:";
-                tb.Text += Environment.NewLine;
+                tb.Text += "Смена знаков:" + Environment.NewLine;
                 tb.Text += $"x = {change_sign[i, 0]}\t y = {change_sign[i, 1]}";
                 tb.Text += Environment.NewLine;
                 tb.Text += $"x = {change_sign[i + 1, 0]}\t y = {change_sign[i + 1, 1]}";
                 tb.Text += Environment.NewLine;
             }
         }
-        private static double find_y_limit(int[] x1x2, int start, int end)
+        private static double Find_Y_Limit(int[] coeffs, int start, int end)
         {
-            int x1 = x1x2[0];
-            int x2 = x1x2[1];
+            int coeff1 = coeffs[0];
+            int coeff2 = coeffs[1];
 
-            double max_abcd = Math.Max(Math.Abs(x1), Math.Abs(x2));
+            double max_coeff = Math.Max(Math.Abs(coeff1), Math.Abs(coeff2));
             double max_x = Math.Max(Math.Abs(start), Math.Abs(end));
-            double y_limit = max_abcd * Math.Pow(max_x,3) + max_abcd * Math.Pow(max_x, 2) +
-                max_abcd * max_x + max_abcd;
+            double y_limit = max_coeff * Math.Pow(max_x, 3) + max_coeff * Math.Pow(max_x, 2) +
+                max_coeff * max_x + max_coeff;
+
             return y_limit;
         }
-        private static double method1 (double[,] change_sign, double mini_step,
+        private static double Method1 (double[,] change_sign, double mini_step,
             double y_limit, int[] abcd)
         {
-
             double bot_lim = change_sign[0, 0];
             double top_lim = change_sign[1, 0];
-            double x_exemplary = 1;
+            double x_exemplary = bot_lim;
             for (double x = bot_lim; x <= top_lim; x += mini_step)
             {
-                double y = calculate_y(x, abcd);
-                if (Math.Abs(y) < y_limit)
+                double y = Math.Abs(Calculate_Y(x, abcd));
+                if (y < y_limit)
                 {
                     x_exemplary = x;
-                    y_limit = Math.Abs(y);
+                    y_limit = y;
                 }
             }
             return x_exemplary;
         }
-        private double method2 (double[,] change_sign, double accuracy, int[] abcd)
+        private static double Method2 (double[,] change_sign, int[] abcd, double accuracy)
         {
             double bot_lim = change_sign[0, 0];
             double top_lim = change_sign[1, 0];
@@ -213,87 +219,81 @@ namespace static_metods_separation
             while (top_lim - bot_lim >= accuracy)
             {
                 x_exemplary = (bot_lim + top_lim) / 2;
-                double y_bot = calculate_y(bot_lim, abcd);
-                double y_top = calculate_y(top_lim, abcd);
-                double y_curr = calculate_y(x_exemplary, abcd);
+                double y_bot = Calculate_Y(bot_lim, abcd);
+                double y_top = Calculate_Y(top_lim, abcd);
+                double y_curr = Calculate_Y(x_exemplary, abcd);
                 if (y_curr == 0)
                 {
                     return x_exemplary;
                 }
                 if (y_curr * y_bot < 0)
+                {
                     top_lim = x_exemplary;
+                }
                 else
+                {
                     if (y_curr * y_top < 0)
+                    {
                         bot_lim = x_exemplary;
+                    }
+                }
             }
             return x_exemplary;
         }
-        private static void print_abcd(TextBox tb, int[] abcd)
-        {
-            tb.Text = "";
-
-            int a = abcd[0];
-            int b = abcd[1];
-            int c = abcd[2];
-            int d = abcd[3];
-
-            tb.Text += $"A = {a}\t B = {b}\t C = {c}\t D = {d}";
-            tb.Text += Environment.NewLine + Environment.NewLine;
-        }
         private void button1_Click(object sender, EventArgs e)
         {
-            int[] x1x2 = parse_x1x2(textBox14, textBox15);
+            int[] coeffs = Parse_Coeffs(textBox14, textBox15);
 
-            print_random_abcd(x1x2, textBox1, textBox2, textBox3, textBox4);
+            Print_Random_ABCD(coeffs, textBox1, textBox2, textBox3, textBox4);
 
-            int[] abсd = parse_abcd(textBox1, textBox2, textBox3, textBox4);
+            int[] abсd = Parse_ABCD(textBox1, textBox2, textBox3, textBox4);
 
-            print_equation(abсd, textBox5);
+            Print_Equation(abсd, textBox5);
         }
         private void button2_Click(object sender, EventArgs e)
         {
 
-            int[] abcd = parse_abcd(textBox1, textBox2, textBox3, textBox4);
+            int[] abcd = Parse_ABCD(textBox1, textBox2, textBox3, textBox4);
 
-            print_equation(abcd, textBox5);
+            Print_Equation(abcd, textBox5);
 
-            print_abcd(textBox9, abcd);
+            Print_ABCD(abcd, textBox9);
 
             int start = int.Parse(textBox6.Text);
             int end = int.Parse(textBox7.Text);
             int step = int.Parse(textBox8.Text);
             int length = (end - start) / step + 1;
 
-            double[,] mas_xy = find_xy(abcd, start, end, step);
+            double[,] mas_xy = Find_XY(abcd, start, end, step);
 
-            print_xy(mas_xy, textBox9);
+            Print_XY(mas_xy, textBox9);
 
-            double[,] change_sign = find_change_sign(mas_xy, length);
+            double[,] change_sign = Find_Change_Sign(mas_xy, length);
 
-            print_change_sign(change_sign, textBox9);
+            Print_Change_Sign(change_sign, textBox9);
 
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            int[] abcd = parse_abcd(textBox1, textBox2, textBox3, textBox4);
-            int[] x1x2 = parse_x1x2(textBox14, textBox15);
+            int[] abcd = Parse_ABCD(textBox1, textBox2, textBox3, textBox4);
+            int[] x1x2 = Parse_Coeffs(textBox14, textBox15);
 
             int start = int.Parse(textBox6.Text);
             int end = int.Parse(textBox7.Text);
             int step = int.Parse(textBox8.Text);
             int length = (end - start) / step + 1;
 
-            double[,] mas_xy = find_xy(abcd, start, end, step);
-            double[,] change_sign = find_change_sign(mas_xy, length);
+            double[,] mas_xy = Find_XY(abcd, start, end, step);
+            double[,] change_sign = Find_Change_Sign(mas_xy, length);
             double mini_step = double.Parse(textBox12.Text);
-            double y_limit = find_y_limit(x1x2, start, end);
+            double y_limit = Find_Y_Limit(x1x2, start, end);
 
-            double x_exemplary = method1(change_sign, mini_step, y_limit, abcd);
+            double x_exemplary = Method1(change_sign, mini_step, y_limit, abcd);
 
             textBox10.Text = "";
             textBox10.Text += $"{x_exemplary:F9}";
             textBox10.Text += Environment.NewLine;
-            double y = calculate_y(x_exemplary, abcd);
+            double y = Calculate_Y(x_exemplary, abcd);
             textBox10.Text += $"{y:F9}";
         }
         private void button4_Click(object sender, EventArgs e)
@@ -304,20 +304,20 @@ namespace static_metods_separation
             int step = int.Parse(textBox8.Text);
             int length = (end - start) / step + 1;
 
-            int[] abcd = parse_abcd(textBox1, textBox2, textBox3, textBox4);
+            int[] abcd = Parse_ABCD(textBox1, textBox2, textBox3, textBox4);
 
-            double[,] mas_xy = find_xy(abcd, start, end, step);
+            double[,] mas_xy = Find_XY(abcd, start, end, step);
 
-            double[,] change_sign = find_change_sign(mas_xy, length);
+            double[,] change_sign = Find_Change_Sign(mas_xy, length);
 
             double accuracy = double.Parse(textBox13.Text);
 
-            double x_exemplary = method2(change_sign, accuracy, abcd);
+            double x_exemplary = Method2(change_sign, abcd, accuracy);
 
             textBox11.Text = "";
             textBox11.Text += $"{x_exemplary:F9}";
             textBox11.Text += Environment.NewLine;
-            double y = calculate_y(x_exemplary, abcd);
+            double y = Calculate_Y(x_exemplary, abcd);
             textBox11.Text += $"{y:F9}";
         }
     }
