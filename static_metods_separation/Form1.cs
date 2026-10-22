@@ -142,32 +142,32 @@ namespace StaticMethodsSeparation
         }
         private  static double[,] FindChangeSign(double[,] masXY, int length)
         {
-            double[,] change_sign = new double[7, 2];
+            double[,] changeSign = new double[7, 2];
             int count = 0;
             for (int i = 1; i < length; i++)
             {
                 if (masXY[i - 1, 1] * masXY[i, 1] < 0)
                 {
-                    change_sign[count, 0] = masXY[i - 1, 0];
-                    change_sign[count, 1] = masXY[i - 1, 1];
-                    change_sign[count + 1, 0] = masXY[i, 0];
-                    change_sign[count + 1, 1] = masXY[i, 1];
+                    changeSign[count, 0] = masXY[i - 1, 0];
+                    changeSign[count, 1] = masXY[i - 1, 1];
+                    changeSign[count + 1, 0] = masXY[i, 0];
+                    changeSign[count + 1, 1] = masXY[i, 1];
                     count += 2;
                 }
                 if ((i != length - 1) && (masXY[i, 1] == 0) &&
                     (masXY[i - 1, 1] * masXY[i + 1, 1] < 0))
                 {
-                    change_sign[count, 0] = masXY[i - 1, 0];
-                    change_sign[count, 1] = masXY[i - 1, 1];
-                    change_sign[count + 1, 0] = masXY[i + 1, 0];
-                    change_sign[count + 1, 1] = masXY[i + 1, 1];
+                    changeSign[count, 0] = masXY[i - 1, 0];
+                    changeSign[count, 1] = masXY[i - 1, 1];
+                    changeSign[count + 1, 0] = masXY[i + 1, 0];
+                    changeSign[count + 1, 1] = masXY[i + 1, 1];
                     count += 2;
                 }
             }
 
-            change_sign[6, 0] = count;
+            changeSign[6, 0] = count;
 
-            return change_sign;
+            return changeSign;
         }
         private static void ShowChangeSign(double[,] changeSign, TextBox tb)
         {
@@ -187,29 +187,29 @@ namespace StaticMethodsSeparation
             int limCoeff1 = limCoeffs[0];
             int limCoeff2 = limCoeffs[1];
 
-            double max_coeff = Math.Max(Math.Abs(limCoeff1), Math.Abs(limCoeff2));
-            double max_x = Math.Max(Math.Abs(start), Math.Abs(end));
-            double y_limit = max_coeff * Math.Pow(max_x, 3) + max_coeff * Math.Pow(max_x, 2) +
-                max_coeff * max_x + max_coeff;
+            double maxCoeff = Math.Max(Math.Abs(limCoeff1), Math.Abs(limCoeff2));
+            double maxX = Math.Max(Math.Abs(start), Math.Abs(end));
+            double yLimit = maxCoeff * Math.Pow(maxX, 3) + maxCoeff * Math.Pow(maxX, 2) +
+                maxCoeff * maxX + maxCoeff;
 
-            return y_limit;
+            return yLimit;
         }
-        private static double Method1 (double[,] changeSign, double smallStep,
-            double y_limit, int[] coeffs)
+        private static double Method1 (double[,] changeSign, int[] coeffs,
+            double smallStep, double yLimit)
         {
-            double bot_lim = changeSign[0, 0];
-            double top_lim = changeSign[1, 0];
-            double x_exemplary = bot_lim;
-            for (double x = bot_lim; x <= top_lim; x += smallStep)
+            double botLim = changeSign[0, 0];
+            double topLim = changeSign[1, 0];
+            double xExemplary = botLim;
+            for (double x = botLim; x <= topLim; x += smallStep)
             {
                 double y = Math.Abs(CalculateY(x, coeffs));
-                if (y < y_limit)
+                if (y < yLimit)
                 {
-                    x_exemplary = x;
-                    y_limit = y;
+                    xExemplary = x;
+                    yLimit = y;
                 }
             }
-            return x_exemplary;
+            return xExemplary;
         }
         private static double Method2 (double[,] changeSign, int[] coeffs, double accuracy)
         {
@@ -296,7 +296,7 @@ namespace StaticMethodsSeparation
             double[,] changeSign = FindChangeSign(masXY, length);
             double yLimit = CalculateYLimit(limCoeffs, start, end);
 
-            double xExemplary = Method1(changeSign, smallStep, yLimit, coeffs);
+            double xExemplary = Method1(changeSign, coeffs, smallStep, yLimit);
 
             ShowExemplaryXY(coeffs, xExemplary, textBox10);
         }
