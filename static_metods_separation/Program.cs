@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace static_metods_separation
+namespace StaticMethodsSeparation
 {
     internal static class Program
     {

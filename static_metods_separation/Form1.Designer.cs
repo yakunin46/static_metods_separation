@@ -1,4 +1,4 @@
-﻿namespace static_metods_separation
+﻿namespace StaticMethodsSeparation
 {
     partial class Form1
     {
