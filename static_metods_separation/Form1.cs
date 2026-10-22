@@ -112,19 +112,19 @@ namespace StaticMethodsSeparation
             double y = a * Math.Pow(x, 3) + b * Math.Pow(x, 2) + c * x + d;
             return y;
         }
-        private static double[,] FindXY(int[] coeffs, int start, int end, int step)
+        private static double[,] FindXY(int[] coeffs, int xLim1, int xLim2, int step)
         {
             int a = coeffs[0];
             int b = coeffs[1];
             int c = coeffs[2];
             int d = coeffs[3];
 
-            int length = (end - start) / step + 1;
+            int length = (xLim2 - xLim1) / step + 1;
             double[,] masXY = new double[length, 2];
-            for (int x = start; x <= end; x += step)
+            for (int x = xLim1; x <= xLim2; x += step)
             {
                 double y = CalculateY(x, coeffs);
-                int i = (x - start) / step;
+                int i = (x - xLim1) / step;
                 masXY[i, 0] = x;
                 masXY[i, 1] = y;
             }
@@ -144,24 +144,22 @@ namespace StaticMethodsSeparation
         {
             double[,] changeSign = new double[7, 2];
             int count = 0;
+            int countZero = 0;
             for (int i = 1; i < length; i++)
             {
-                if (masXY[i - 1, 1] * masXY[i, 1] < 0)
+                int index = i - 1 - countZero;
+                if (masXY[index, 1] * masXY[i, 1] < 0)
                 {
-                    changeSign[count, 0] = masXY[i - 1, 0];
-                    changeSign[count, 1] = masXY[i - 1, 1];
+                    changeSign[count, 0] = masXY[index, 0];
+                    changeSign[count, 1] = masXY[index, 1];
                     changeSign[count + 1, 0] = masXY[i, 0];
                     changeSign[count + 1, 1] = masXY[i, 1];
                     count += 2;
+                    countZero = 0;
                 }
-                if ((i != length - 1) && (masXY[i, 1] == 0) &&
-                    (masXY[i - 1, 1] * masXY[i + 1, 1] < 0))
+                if (masXY[i, 1] == 0)
                 {
-                    changeSign[count, 0] = masXY[i - 1, 0];
-                    changeSign[count, 1] = masXY[i - 1, 1];
-                    changeSign[count + 1, 0] = masXY[i + 1, 0];
-                    changeSign[count + 1, 1] = masXY[i + 1, 1];
-                    count += 2;
+                    countZero++;
                 }
             }
 
@@ -182,13 +180,13 @@ namespace StaticMethodsSeparation
                 tb.Text += Environment.NewLine;
             }
         }
-        private static double CalculateYLimit(int[] limCoeffs, int start, int end)
+        private static double CalculateYLimit(int[] limCoeffs, int xLim1, int xLim2)
         {
             int limCoeff1 = limCoeffs[0];
             int limCoeff2 = limCoeffs[1];
 
             double maxCoeff = Math.Max(Math.Abs(limCoeff1), Math.Abs(limCoeff2));
-            double maxX = Math.Max(Math.Abs(start), Math.Abs(end));
+            double maxX = Math.Max(Math.Abs(xLim1), Math.Abs(xLim2));
             double yLimit = maxCoeff * Math.Pow(maxX, 3) + maxCoeff * Math.Pow(maxX, 2) +
                 maxCoeff * maxX + maxCoeff;
 
@@ -266,12 +264,12 @@ namespace StaticMethodsSeparation
 
             ShowCoeffs(coeffs, textBox9);
 
-            int start = int.Parse(textBox6.Text);
-            int end = int.Parse(textBox7.Text);
+            int xLim1 = int.Parse(textBox6.Text);
+            int xLim2 = int.Parse(textBox7.Text);
             int step = int.Parse(textBox8.Text);
-            int length = (end - start) / step + 1;
+            int length = (xLim2 - xLim1) / step + 1;
 
-            double[,] masXY = FindXY(coeffs, start, end, step);
+            double[,] masXY = FindXY(coeffs, xLim1, xLim2, step);
 
             ShowXY(masXY, textBox9);
 
@@ -285,16 +283,16 @@ namespace StaticMethodsSeparation
             int[] limCoeffs = ParseLimCoeffs(textBox14, textBox15);
             int[] coeffs = ParseCoeffs(textBox1, textBox2, textBox3, textBox4);
 
-            int start = int.Parse(textBox6.Text);
-            int end = int.Parse(textBox7.Text);
+            int xLim1 = int.Parse(textBox6.Text);
+            int xLim2 = int.Parse(textBox7.Text);
             int step = int.Parse(textBox8.Text);
-            int length = (end - start) / step + 1;
+            int length = (xLim2 - xLim1) / step + 1;
 
             double smallStep = double.Parse(textBox12.Text);
 
-            double[,] masXY = FindXY(coeffs, start, end, step);
+            double[,] masXY = FindXY(coeffs, xLim1, xLim2, step);
             double[,] changeSign = FindChangeSign(masXY, length);
-            double yLimit = CalculateYLimit(limCoeffs, start, end);
+            double yLimit = CalculateYLimit(limCoeffs, xLim1, xLim2);
 
             double xExemplary = Method1(changeSign, coeffs, smallStep, yLimit);
 
