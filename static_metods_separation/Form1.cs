@@ -240,9 +240,9 @@ namespace StaticMethodsSeparation
         private static void ShowExemplaryXY(int[] coeffs, double xExemplary, TextBox tb)
         {
             tb.Text = "";
-            tb.Text += $"{xExemplary:F9}" + Environment.NewLine; ;
-            double y = CalculateY(xExemplary, coeffs);
-            tb.Text += $"{y:F9}";
+            tb.Text += $"{xExemplary:F9}" + Environment.NewLine;
+            double yExemplary = CalculateY(xExemplary, coeffs);
+            tb.Text += $"{yExemplary:F9}";
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -299,18 +299,17 @@ namespace StaticMethodsSeparation
         }
         private void button4_Click(object sender, EventArgs e)
         {
+            int[] coeffs = ParseCoeffs(textBox1, textBox2, textBox3, textBox4);
+
             int start = int.Parse(textBox6.Text);
             int end = int.Parse(textBox7.Text);
             int step = int.Parse(textBox8.Text);
             int length = (end - start) / step + 1;
 
-            int[] coeffs = ParseCoeffs(textBox1, textBox2, textBox3, textBox4);
+            double accuracy = double.Parse(textBox13.Text);
 
             double[,] masXY = FindXY(coeffs, start, end, step);
-
             double[,] changeSign = FindChangeSign(masXY, length);
-
-            double accuracy = double.Parse(textBox13.Text);
 
             double xExemplary = Method2(changeSign, coeffs, accuracy);
 
