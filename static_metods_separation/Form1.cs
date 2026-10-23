@@ -21,23 +21,23 @@ namespace StaticMethodsSeparation
             InitializeComponent();
         }
 
-        private static int[] ParseLimCoeffs(TextBox tb1, TextBox tb2)
+        private static int[] ParseLimsOfCoeffs(TextBox tb1, TextBox tb2)
         {
-            int[] limСoeffs = new int[2];
-            limСoeffs[0] = int.Parse(tb1.Text);
-            limСoeffs[1] = int.Parse(tb2.Text) + 1;
-            return limСoeffs;
+            int[] limsOfCoeffs = new int[2];
+            limsOfCoeffs[0] = int.Parse(tb1.Text);
+            limsOfCoeffs[1] = int.Parse(tb2.Text) + 1;
+            return limsOfCoeffs;
         }
-        private static void FillRandomCoeffs(int[] limСoeffs,
+        private static void FillRandomCoeffs(int[] limsOfCoeffs,
             TextBox tb1, TextBox tb2, TextBox tb3, TextBox tb4)
         {
-            int limСoeff1 = limСoeffs[0];
-            int limСoeff2 = limСoeffs[1];
+            int limOfCoeffs1 = limsOfCoeffs[0];
+            int limOfСoeffs2 = limsOfCoeffs[1];
             Random r = new Random();
-            tb1.Text = r.Next(limСoeff1, limСoeff2).ToString();
-            tb2.Text = r.Next(limСoeff1, limСoeff2).ToString();
-            tb3.Text = r.Next(limСoeff1, limСoeff2).ToString();
-            tb4.Text = r.Next(limСoeff1, limСoeff2).ToString();
+            tb1.Text = r.Next(limOfCoeffs1, limOfСoeffs2).ToString();
+            tb2.Text = r.Next(limOfCoeffs1, limOfСoeffs2).ToString();
+            tb3.Text = r.Next(limOfCoeffs1, limOfСoeffs2).ToString();
+            tb4.Text = r.Next(limOfCoeffs1, limOfСoeffs2).ToString();
         }
         private static int[] ParseCoeffs(TextBox tb1, TextBox tb2, TextBox tb3, TextBox tb4)
         {
@@ -154,8 +154,7 @@ namespace StaticMethodsSeparation
                     changeSign[count, 1] = masXY[index, 1];
                     changeSign[count + 1, 0] = masXY[i, 0];
                     changeSign[count + 1, 1] = masXY[i, 1];
-                    count += 2;
-                    countZero = 0;
+                    count += 2; countZero = 0;
                 }
                 if (masXY[i, 1] == 0)
                 {
@@ -180,12 +179,12 @@ namespace StaticMethodsSeparation
                 tb.Text += Environment.NewLine;
             }
         }
-        private static double CalculateYLimit(int[] limCoeffs, int xLim1, int xLim2)
+        private static double CalculateYLimit(int[] limsOfCoeffs, int xLim1, int xLim2)
         {
-            int limCoeff1 = limCoeffs[0];
-            int limCoeff2 = limCoeffs[1];
+            int limOfCoeffs1 = limsOfCoeffs[0];
+            int limOfCoeffs2 = limsOfCoeffs[1];
 
-            double maxCoeff = Math.Max(Math.Abs(limCoeff1), Math.Abs(limCoeff2));
+            double maxCoeff = Math.Max(Math.Abs(limOfCoeffs1), Math.Abs(limOfCoeffs2));
             double maxX = Math.Max(Math.Abs(xLim1), Math.Abs(xLim2));
             double yLimit = maxCoeff * Math.Pow(maxX, 3) + maxCoeff * Math.Pow(maxX, 2) +
                 maxCoeff * maxX + maxCoeff;
@@ -247,9 +246,9 @@ namespace StaticMethodsSeparation
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            int[] limCoeffs = ParseLimCoeffs(textBox14, textBox15);
+            int[] limsOfCoeffs = ParseLimsOfCoeffs(textBox14, textBox15);
 
-            FillRandomCoeffs(limCoeffs, textBox1, textBox2, textBox3, textBox4);
+            FillRandomCoeffs(limsOfCoeffs, textBox1, textBox2, textBox3, textBox4);
 
             int[] coeffs = ParseCoeffs(textBox1, textBox2, textBox3, textBox4);
 
@@ -280,7 +279,7 @@ namespace StaticMethodsSeparation
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            int[] limCoeffs = ParseLimCoeffs(textBox14, textBox15);
+            int[] limsOfCoeffs = ParseLimsOfCoeffs(textBox14, textBox15);
             int[] coeffs = ParseCoeffs(textBox1, textBox2, textBox3, textBox4);
 
             int xLim1 = int.Parse(textBox6.Text);
@@ -292,7 +291,7 @@ namespace StaticMethodsSeparation
 
             double[,] masXY = FindXY(coeffs, xLim1, xLim2, step);
             double[,] changeSign = FindChangeSign(masXY, length);
-            double yLimit = CalculateYLimit(limCoeffs, xLim1, xLim2);
+            double yLimit = CalculateYLimit(limsOfCoeffs, xLim1, xLim2);
 
             double xExemplary = Method1(changeSign, coeffs, smallStep, yLimit);
 
